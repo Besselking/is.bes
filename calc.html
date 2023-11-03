@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="style.css">
+    <title>MB / calc</title>
+</head>
+
+<body>
+    <header>
+        <svg xmlns="http://www.w3.org/2000/svg" id="logo" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"
+            xmlns:svgjs="http://svgjs.dev/svgjs" viewBox="0 0 800 400">
+            <path
+                d="M54.26008987426758,304.0358581542969C52.801195856730146,265.55753484090167,32.49626341501872,141.97009913126627,47.085201263427734,114.79820251464844C61.67413911183675,87.62630589803061,91.907320950826,171.49774983723958,126.00896453857422,170.40357971191406C160.11060812632243,169.30940958658854,195.1031356048584,84.06875615437826,214.79820251464844,109.41703796386719C234.49326942443847,134.7653197733561,195.51569310506184,269.53661931355794,222.8699493408203,295.0672607421875C250.22420557657878,320.59790217081706,342.2152226257324,258.137511138916,349.32733154296875,234.97756958007812C356.4394404602051,211.81762802124024,257.30044911702475,206.87891296386718,257.8475341796875,181.16590881347656C258.39461924235025,155.45290466308595,360.5889183044434,123.65619580586751,352.0179138183594,108.52017211914062C343.44690933227537,93.38414843241374,243.41403477986654,107.09117195129394,215.69505310058594,106.72644805908203"
+                fill="none" stroke-width="22" stroke="url(&quot;#SvgjsLinearGradient1001&quot;)" stroke-linecap="round"
+                stroke-dasharray="125 106"
+                transform="matrix(1.477455443789063,0,0,1.477455443789063,146.53673293574354,-95.92382431145532)">
+                <animate attributeName="stroke-dashoffset" values="230;184;138;92;46;0" dur="2s" repeatCount="1"
+                    begin="logo.mouseenter" restart="whenNotActive" />
+
+            </path>
+            <defs>
+                <linearGradient id="SvgjsLinearGradient1001" gradientTransform="rotate(360, 0.5, 0.5)">
+                    <stop stop-color="hsl(37, 99%, 67%)" offset="0"></stop>
+                    <stop stop-color="hsl(316, 73%, 52%)" offset="1"></stop>
+                </linearGradient>
+            </defs>
+        </svg>
+        <h1>.bes.is</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="/">MB.bes.is</a></li>
+            <li>Calculator</li>
+        </ul>
+    </nav>
+    <hr />
+
+    <main>
+        <p>A rpn calculator</p>
+        <form id="form" class="flex-row">
+            <input id="input" type="text" placeholder="1 2 +" />
+            <input type="submit" value="Submit">
+        </form>
+        <div>
+            <div id="log"></div>
+        </div>
+
+        <fieldset class="docs">
+            <legend>Available stack operations</legend>
+            <details>
+                <summary>dup</summary>
+                <p>Duplicates the top value on the stack</p>
+                <div class="flex-spread">
+                    <span>[1, 2, 3]</span>
+                    <span>dup</span>
+                </div>
+                <div class="flex-spread">
+                    <span>[1, 1, 2, 3]</span>
+                    <span></span>
+                </div>
+            </details>
+
+            <details>
+                <summary>drop</summary>
+                <p>Drops the top value on the stack</p>
+                <div class="flex-spread">
+                    <span>[1, 2, 3]</span>
+                    <span>drop</span>
+                </div>
+                <div class="flex-spread">
+                    <span>[2, 3]</span>
+                    <span></span>
+                </div>
+            </details>
+
+            <details>
+                <summary>swap</summary>
+                <p>Swaps the top two values on the stack</p>
+                <div class="flex-spread">
+                    <span>[1, 2, 3]</span>
+                    <span>swap</span>
+                </div>
+                <div class="flex-spread">
+                    <span>[2, 1, 3]</span>
+                    <span></span>
+                </div>
+            </details>
+        </aside>
+    </main>
+
+    <hr />
+    <footer>
+        <ul>
+            <li><a href="/index.html"></a></li>
+            <li><a href="/calc.html"></a></li>
+        </ul>
+    </footer>
+</body>
+<script>
+    function getById(id) {
+        let element = document.getElementById(id)
+        if (element) {
+            return element;
+        } else {
+            throw `Element with id '${id}' not found.`
+        }
+    }
+
+    function writeError(error) {
+        let log_row = document.createElement("div");
+
+        let log_left = document.createElement("span");
+        log_left.textContent = error;
+
+        log_row.appendChild(log_left);
+
+        log.appendChild(log_row);
+    }
+
+    /** @param {SubmitEvent} event - event */
+    function submitForm(event) {
+        console.log(input.value);
+        resetLog();
+        try {
+            const stack = evalString(input.value);
+            console.log(stack);
+
+            const path = window.location.pathname;
+            const params = new URLSearchParams(window.location.search);
+            const hash = window.location.hash;
+
+            params.set("in", input.value);
+            window.history.replaceState({}, '', `${path}?${params.toString()}${hash}`);
+        }
+        catch (error) {
+            writeError(error);
+        }
+        event.preventDefault();
+    }
+
+    /** @param {string} input */
+    function evalString(input) {
+        let words = input.trim().split(' ').filter(i => i);
+        return evalWords([], words);
+    }
+
+    function effect2(f) {
+        return (stack) => {
+            if (stack.length <= 1) throw "stack underflow";
+            let [x, y, ...rest] = stack;
+            return [f(y, x), ...rest];
+        }
+    }
+
+    const plus = effect2((a, b) => a + b);
+    const subtract = effect2((a, b) => a - b);
+    const multiply = effect2((a, b) => a * b);
+    const divide = effect2((a, b) => a / b);
+
+
+    function evalWords(stack, words) {
+        writeLog(stack, words);
+        if (words.length == 0) return stack;
+
+        let [word, ...rest] = words;
+        return evalWords(evalWord(word, stack), rest);
+    }
+
+    function evalWord(word, stack, rest) {
+        switch (word) {
+            case "+": return plus(stack);
+            case "-": return subtract(stack);
+            case "*": return multiply(stack);
+            case "/": return divide(stack);
+            case "dup": return dup(stack);
+            case "drop": return drop(stack);
+            case "swap": return swap(stack);
+            default: return parse(word, stack);
+        }
+    }
+
+    function dup(stack) {
+        let [x, ...rest] = stack;
+        return [x, x, ...rest];
+    }
+
+    function drop(stack) {
+        let [_, ...rest] = stack;
+        return rest;
+    }
+
+    function swap(stack) {
+        let [x, y, ...rest] = stack;
+        return [y, x, ...rest];
+    }
+
+    function parse(word, stack) {
+        let num = Number(word);
+        if (isNaN(num)) {
+            throw `word '${word}' not recognised`;
+        }
+        return [num, ...stack];
+    }
+
+    function writeLog(stack, words) {
+        let log_row = document.createElement("div");
+        log_row.className = "flex-spread";
+
+        let log_left = document.createElement("span");
+        log_left.textContent = `[${stack.join(', ')}]`;
+        let log_right = document.createElement("span");
+        log_right.textContent = words.join(' ');
+
+        if (words.length === 0) {
+            log_left.textContent += " <=="
+        }
+
+        log_row.appendChild(log_left);
+        log_row.appendChild(log_right);
+
+        log.appendChild(log_row);
+    }
+
+
+
+    function resetLog() {
+        if (!log.hasChildNodes()) return;
+
+        let details = document.createElement("details");
+        let summary = document.createElement("summary");
+        details.className = "history"
+        summary.textContent = log.firstChild.lastChild.textContent;
+
+        let old_log = log.cloneNode(true);
+        old_log.id = '';
+        details.appendChild(summary);
+        details.appendChild(old_log);
+
+        log.insertAdjacentElement("afterend", details);
+        log.replaceChildren(); //remove children, clear log
+    }
+
+    const form = getById("form");
+    const input = getById("input");
+    const log = getById("log");
+
+    form.addEventListener("submit", submitForm);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryInput = urlParams.get('in');
+
+    if (input.value.length === 0) {
+        input.value = queryInput;
+    }
+</script>
+
+</html>
