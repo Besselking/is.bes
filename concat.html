@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="reset.css">
     <link rel="stylesheet" href="style.css">
-    <title>MB / calc</title>
+    <title>MB / concat</title>
 </head>
 
 <body>
@@ -18,15 +18,15 @@
     <nav>
         <ul>
             <li><a href="/">MB.bes.is</a></li>
-            <li>Calculator</li>
+            <li>Concatenator</li>
         </ul>
     </nav>
     <hr />
 
     <main>
-        <p>A rpn calculator</p>
-        <form id="form" class="flex-row">
-            <input id="input" type="text" placeholder="1 2 +" />
+        <p>A "concatenative language"</p>
+        <form id="form">
+            <textarea id="input" placeholder="1 2 +" rows="5"></textarea>
             <input type="submit" value="Submit">
         </form>
         <div>
@@ -34,7 +34,7 @@
         </div>
 
         <fieldset class="docs">
-            <legend>Available stack operations</legend>
+            <legend>Predefined operations</legend>
             <details>
                 <summary>dup</summary>
                 <p>Duplicates the top value on the stack</p>
@@ -73,11 +73,42 @@
                     <span></span>
                 </div>
             </details>
-        </aside>
-    </main>
 
+            <details>
+                <summary>: word ... ;</summary>
+                <p>Creates a new definition.</p>
+                <p>Example: ": double 2 * ;" defines a new word called double. Any subsequent mention of double will
+                    replace the word with its definition.</p>
+                <div class="flex-spread">
+                    <span>[]</span>
+                    <span>: double 2 * ; 3 double</span>
+                </div>
+                <div class="flex-spread">
+                    <span>[]</span>
+                    <span>3 double</span>
+                </div>
+                <div class="flex-spread">
+                    <span>[3]</span>
+                    <span>double</span>
+                </div>
+                <div class="flex-spread">
+                    <span>[3]</span>
+                    <span>2 *</span>
+                </div>
+                <div class="flex-spread">
+                    <span>[2, 3]</span>
+                    <span>*</span>
+                </div>
+                <div class="flex-spread">
+                    <span>[6] &lt;==</span>
+                    <span></span>
+                </div>
+            </details>
+            </aside>
+    </main>
     <hr />
     <script src="footer.js" type="module"></script>
 </body>
-<script src="calc.js" type="module"></script>
+<script src="concat.js" type="module"></script>
+
 </html>

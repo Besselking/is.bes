@@ -46,6 +46,12 @@ input[type="text"] {
     display: inline-block;
 }
 
+textarea {
+    width: 100%;
+    display: block;
+    margin: 1em 0;
+}
+
 input[type="submit"] {
     width: 20%;
     display:inline-block;

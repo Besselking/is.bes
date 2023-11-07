@@ -7,7 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="reset.css">
     <link rel="stylesheet" href="style.css">
-    <title>MB</title>
+    <style>
+        #canvas {
+            width: 100%;
+            aspect-ratio: 1;
+        }
+    </style>
+    <title>MB / canvas</title>
 </head>
 
 <body>
@@ -18,15 +24,26 @@
     <nav>
         <ul>
             <li><a href="/">MB.bes.is</a></li>
-            <li>Home</li>
+            <li>Canvas</li>
         </ul>
     </nav>
     <hr>
+
     <main>
-        <p>A couple of JS/HTML experiments.</p>
+        <canvas id="canvas"></canvas>
     </main>
+
     <hr>
     <script src="footer.js" type="module"></script>
 </body>
+<script type="module">
+    import { getById } from "./common.js"
+    const canvas = getById("canvas");
+    const ctx = canvas.getContext("2d", { alpha: false });
+
+    ctx.fillStyle = "white";
+    ctx.fill();
+
+</script>
 
 </html>
