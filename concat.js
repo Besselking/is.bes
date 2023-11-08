@@ -25,19 +25,20 @@ function submitForm(event) {
     }
     catch (error) {
         writeError(error);
+        console.log(error);
     }
     event.preventDefault();
 }
 
-/** @param {string} input */
-function evalString(input) {
-    let words = input.trim().split(/[\s,]+/).filter(i => i);
-    return evalWords([], words);
+/** @param {string} inputString */
+function evalString(inputString) {
+    let words = inputString.trim().split(/[\s,]+/).filter(i => i);
+    return evalWords(words);
 }
 
 function effect2(f) {
     return (stack) => {
-        if (stack.length <= 1) throw "stack underflow";
+        if (stack.length <= 1) throw "stack underflow, need 2 numbers";
         let [x, y, ...rest] = stack;
         return [f(y, x), ...rest];
     }
@@ -49,13 +50,19 @@ const multiply = effect2((a, b) => a * b);
 const divide = effect2((a, b) => a / b);
 
 
-function evalWords(stack, words) {
-    writeLog(stack, words);
-    if (words.length == 0) return stack;
+function evalWords(inputWords) {
+    let words = inputWords;
+    let stack = [];
 
-    let [word, ...rest] = words;
-    let[newstack, newwords] = evalWord(word, stack, rest);
-    return evalWords(newstack, newwords);
+    while (words.length > 0) {
+        writeLog(stack, words);
+        if (words.length == 0) return stack;
+        
+        let [word, ...rest] = words;
+        [stack, words] = evalWord(word, stack, rest);
+    }
+    writeLog(stack, words);
+    return stack;
 }
 
 function evalWord(word, stack, rest) {
@@ -67,12 +74,26 @@ function evalWord(word, stack, rest) {
         case "dup": return [dup(stack), rest];
         case "drop": return [drop(stack), rest];
         case "swap": return [swap(stack), rest];
+        case "skip": return skip(stack, rest);
         case ":": return [stack, define(rest)];
         default: return parse(word, stack, rest);
     }
 }
 
+function skip(stack, words) {
+    if (stack.length == 0) throw "stack underflow, dont know how much to skip";
+    let [amount, ...restStack] = stack;
+
+    if (amount > words.length) throw `program underflow, cant skip ${amount} words`;
+    if (amount <= 0) return [stack.slice(1), words]; // no skipping on <= 0 
+
+    let restWords = words.slice(amount);
+
+    return [restStack, restWords];
+}
+
 function define(words) {
+    if (words.length < 2) throw "missing definition after ':'"
     let [ident, ...rest] = words;
     let index = 0;
     let definition = [];
@@ -81,6 +102,8 @@ function define(words) {
         const word = rest[index];
         if (word === ";") {
             break;
+        } else if (rest.length - 1 == index) {
+            throw "expected ';', found end of program"
         }
         definition.push(word);
     }
@@ -91,16 +114,19 @@ function define(words) {
 }
 
 function dup(stack) {
+    if (stack.length == 0) throw "stack underflow, nothing to duplicate";
     let [x, ...rest] = stack;
     return [x, x, ...rest];
 }
 
 function drop(stack) {
+    if (stack.length == 0) throw "stack underflow, nothing to drop";
     let [_, ...rest] = stack;
     return rest;
 }
 
 function swap(stack) {
+    if (stack.length < 2) throw "stack underflow, not enough to swap";
     let [x, y, ...rest] = stack;
     return [y, x, ...rest];
 }

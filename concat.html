@@ -75,6 +75,43 @@
             </details>
 
             <details>
+                <summary>skip</summary>
+                <p>Skips forward in the program by the amount on the top of the stack.
+                    If the value on the top of the stack is 0 or negative,
+                    the value is dropped and the program does not skip ahead.
+                </p>
+                <div class="flex-spread">
+                    <span>[1, 2, 3]</span>
+                    <span>skip drop dup</span>
+                </div>
+                <div class="flex-spread">
+                    <span>[2, 3]</span>
+                    <span>dup</span>
+                </div>
+                <div class="flex-spread">
+                    <span>[2, 2, 3]</span>
+                    <span></span>
+                </div>
+                Or
+                <div class="flex-spread">
+                    <span>[-1, 2, 3]</span>
+                    <span>skip drop dup</span>
+                </div>
+                <div class="flex-spread">
+                    <span>[2, 3]</span>
+                    <span>drop dup</span>
+                </div>
+                <div class="flex-spread">
+                    <span>[3]</span>
+                    <span>dup</span>
+                </div>
+                <div class="flex-spread">
+                    <span>[3, 3]</span>
+                    <span></span>
+                </div>
+            </details>
+
+            <details>
                 <summary>: word ... ;</summary>
                 <p>Creates a new definition.</p>
                 <p>Example: ": double 2 * ;" defines a new word called double. Any subsequent mention of double will
@@ -104,7 +141,19 @@
                     <span></span>
                 </div>
             </details>
-            </aside>
+        </fieldset>
+        <fieldset class="docs">
+            <legend>Example programs</legend>
+            <details>
+                <summary>Factorial</summary>
+                <a href="/concat.html?in=FwAgxg9grgdgLgUwE4lQEygBxAJhAWhA2zwCoCQBuAKFAEJUisQBGCyWRFAZwGsBLbA3I0A7CDrUgA">Replace program</a>
+                <pre>
+                    : counter   dup 2 - dup 2 * - ;
+                    : !   dup 1 - counter skip ! * ;
+                    7 !
+                </pre>
+            </details>
+        </fieldset>
     </main>
     <hr />
     <script src="footer.js" type="module"></script>
