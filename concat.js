@@ -54,12 +54,16 @@ function evalWords(inputWords) {
     let words = inputWords;
     let stack = [];
 
+    writeLog(stack, words);
     while (words.length > 0) {
-        writeLog(stack, words);
         if (words.length == 0) return stack;
         
         let [word, ...rest] = words;
-        [stack, words] = evalWord(word, stack, rest);
+        let [newstack, newwords] = evalWord(word, stack, rest);
+        if (newstack.length != stack.length) {
+            writeLog(stack, words);
+        }
+        [stack, words] = [newstack, newwords];
     }
     writeLog(stack, words);
     return stack;
