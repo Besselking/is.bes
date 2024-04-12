@@ -6,7 +6,7 @@ const urls = [
     "index",
     "calc",
     "concat",
-    "canvas"
+    "letterflixd",
 ];
 
 document.querySelector('script[src="footer.js"]').replaceWith(footer(ul(...urls.map(url => li(a(`/${url}.html`))))));

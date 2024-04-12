@@ -1,9 +1,5 @@
-import { getById, div, span, h } from "./common.js"
+import { getById, div, span, h, writeError} from "./common.js"
 import lzString from "./lz-string.js";
-
-function writeError(error) {
-    log.appendChild(div(span(error)));
-}
 
 var definitions = {};
 
@@ -30,9 +26,13 @@ function submitForm(event) {
     event.preventDefault();
 }
 
+function splitWords(input) {
+    return input.trim().split(/[\s]+/).filter(i => i)
+}
+
 /** @param {string} inputString */
 function evalString(inputString) {
-    let words = inputString.trim().split(/[\s,]+/).filter(i => i);
+    let words = splitWords(inputString);
     return evalWords(words);
 }
 
@@ -75,8 +75,18 @@ function evalWord(word, stack, rest) {
         case "drop": return [drop(stack), rest];
         case "swap": return [swap(stack), rest];
         case "skip": return skip(stack, rest);
+        case ",,": return unquote(stack, rest);
         case ":": return [stack, define(rest)];
         default: return parse(word, stack, rest);
+    }
+}
+
+function unquote(stack, rest) {
+    let [quote, ...restStack] = stack;
+    if (typeof quote === 'string' || quote instanceof String) {
+        return [restStack, [...splitWords(quote), ...rest]]
+    } else {
+        throw "not a string, only strings are unquoteable"
     }
 }
 
@@ -132,6 +142,10 @@ function swap(stack) {
 }
 
 function parse(word, stack, rest) {
+    if (word.startsWith('"')) {
+        return parseString(word, stack, rest);
+    }
+
     if (word in definitions) {
         return [stack, [...definitions[word], ...rest]]
     }
@@ -142,6 +156,28 @@ function parse(word, stack, rest) {
     }
 
     return [[num, ...stack], rest];
+}
+
+function parseString(word, stack, rest) {
+    if (word.length > 1 && word.endsWith('"')) {
+        return [[word.slice(1, -1), ...stack], rest]
+    }
+
+    let string = word.slice(1);
+    let index = 0;
+
+    for (; index < rest.length; index++) {
+        const word = rest[index];
+        if (word.endsWith('"')) {
+            string = string.concat(" ", word.slice(0,-1));
+            break;
+        } else if (rest.length - 1 == index) {
+            throw "expected word ending with '\"', found end of program"
+        }
+        string = string.concat(" ", word)
+    }
+
+    return [[string, ...stack], rest.slice(index+1)]
 }
 
 function writeLog(stack, words) {

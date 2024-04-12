@@ -65,4 +65,28 @@ function h(elementTag, ...children) {
     return elem;
 }
 
-export { getById, ul, li, a, footer, div, span, h }
+/** @param {HTMLElement} element  */
+function addClass(element, newClass) {
+    element.classList.add(newClass);
+    return element;
+}
+
+function writeError(error) {
+    log.appendChild(div(addClass(span(error), "error")));
+}
+
+function writeInfo(msg) {
+    log.appendChild(div(addClass(span(msg), "info")));
+}
+
+function writeDebug(msg) {
+    log.appendChild(div(addClass(span(msg), "debug")));
+}
+
+function resetLog() {
+    log.replaceChildren();
+}
+
+const log = getById("log");
+
+export { getById, ul, li, a, footer, div, span, h, addClass, writeError, writeInfo, writeDebug, resetLog }

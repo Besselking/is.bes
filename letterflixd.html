@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="style.css">
+    <title>MB / concat</title>
+</head>
+
+<body class="center">
+    <header>
+        <script src="logo.js" type="module"></script>
+        <h1>.bes.is</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="/">MB.bes.is</a></li>
+            <li>Letterflixd</li>
+        </ul>
+    </nav>
+    <hr />
+
+    <main>
+        <p>Convert Netflix viewing history to a Letterboxd import file.</p>
+        <p>Download your viewing history from netflix at <a href="https://www.netflix.com/settings/viewed/" target="_blank"></a></p>
+        <form id="form">
+            <fieldset class="docs">
+                <div class="row">
+                    <label for="netflix-file">
+                        Netflix viewing history file:
+                        <input id="netflix-file" type="file" >
+                    </label>
+                </div>
+                <div class="row">
+                    <input type="submit" value="Convert">
+                </div>
+            </fieldset>
+        </form>
+        <div>
+            <label for="debug">
+                Show debug log
+                <input type="checkbox" id="debug">
+            </label>
+            <div id="log"></div>
+        </div>
+    </main>
+    <hr />
+    <script src="footer.js" type="module"></script>
+</body>
+<script src="letterflixd.js" type="module"></script>
+
+</html>

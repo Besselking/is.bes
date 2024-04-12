@@ -1,9 +1,45 @@
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --black: #050505;
+    --white: #fafafa;
+    --error: #DA0000;
+    --info: #669ABA;
+
+
+    --ratio: 1.5;
+    --s0: 1rem;
+    --s1: calc(var(--s0) * var(--ratio)) font-size: calc(1rem + 0.5vw);
+    font-family: monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: var(--black);
+        --color: var(--white);
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --background: var(--white);
+        --color: var(--black);
+    }
+}
+
 body {
-    max-width: 60ch;
-    margin: auto;
-    font-family: sans-serif;
-    padding-left: 1em;
-    padding-right: 1em;
+    background-color: var(--background);
+    color: var(--color);
+}
+
+.center {
+    box-sizing: content-box;
+    max-inline-size: 60ch;
+    margin-inline: auto;
+    padding-inline-start: var(--s1);
+    padding-inline-end: var(--s1);
 }
 
 #logo {
@@ -11,7 +47,8 @@ body {
     display: inline-block;
 }
 
-header > h1 {
+header>h1 {
+    color: var(--header);
     display: inline-block;
 }
 
@@ -19,22 +56,30 @@ header > h1 {
     border-bottom: 1px solid black;
 } */
 
-nav > ul {
+nav>ul {
     list-style-type: none;
     padding-left: 0;
 }
 
-nav > ul > li {
+nav>ul>li {
     display: inline-block;
 }
 
-nav > ul > li > a::after {
+nav>ul>li>a::after {
     display: inline-block;
-    color: black;
+    color: var(--color);
     content: '>';
     font-size: 80%;
     font-weight: bold;
     padding: 0 3px;
+}
+
+a {
+    color: var(--anchor);
+}
+
+a:visited {
+    color: var(--anchorvisited);
 }
 
 a:empty::before {
@@ -44,14 +89,22 @@ a:empty::before {
 input[type="text"] {
     width: 80%;
     display: inline-block;
+    background-color: var(--background);
+    color: var(--color);
+    border-color: var(--color);
+    border-radius: 0.5em;
 }
 
 textarea {
     width: 100%;
     display: block;
-    margin: 1em 0;
+    margin-inline: 0 1em;
     font-family: monospace;
     white-space: pre-wrap;
+    background-color: var(--background);
+    color: var(--color);
+    border-color: var(--border);
+    border-radius: 0.5em;
 }
 
 pre {
@@ -61,8 +114,20 @@ pre {
 
 input[type="submit"] {
     min-width: 20%;
-    display:inline-block;
-    border: 1px solid gray;
+    display: inline-block;
+    color: var(--color);
+    background-color: var(--background);
+    border: 1px solid var(--color);
+    border-radius: 0.5em;
+    padding: 0.1em 1em;
+}
+
+input[type="file"]::file-selector-button {
+    min-width: 20%;
+    display: inline-block;
+    color: var(--color);
+    background-color: var(--background);
+    border: 1px solid var(--color);
     border-radius: 0.5em;
     padding: 0.1em 1em;
 }
@@ -79,26 +144,48 @@ input[type="submit"] {
 }
 
 .history {
-    color: gray;
+    filter: opacity(30%);
 }
 
-div + .history {
+div+.history {
     margin-top: 2em;
 }
 
-
 hr {
-    border:none;
-    border-top: 1px solid black;
-    color: black;
+    border: none;
+    border-top: 1px solid var(--color);
+    color: var(--color);
     overflow: visible;
     text-align: center;
     height: 5px;
 }
 
 .docs {
-    margin-top: 2em;
-    border: 2px dashed lightgray;
+    margin: 2em 0;
+    border: 2px dashed var(--color);
     padding: 0.5em 1em;
     border-radius: 0.5em;
+}
+
+.error::before {
+    content: "ERR: ";
+    color: var(--error);
+}
+
+.info::before {
+    content: "INF: ";
+    color: var(--info);
+}
+
+label:has(> #debug:not(:checked)) + #log .debug {
+    display: none;
+}
+
+.debug::before {
+    content: "DBG: ";
+    color: var(--info);
+}
+
+.row + .row {
+    margin-block-start: 1em;
 }
