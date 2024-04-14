@@ -1,0 +1,30 @@
+__nav Netflix to Letterboxd converter__
+
+<main>
+    <p>Convert Netflix viewing history to a Letterboxd import file.</p>
+    <p>Download your viewing history from Netflix at <a href="https://www.netflix.com/settings/viewed/"
+            target="_blank">https://www.netflix.com/settings/viewed/</a></p>
+    <p>Import the resulting Letterboxd file at <a href="https://letterboxd.com/import/"
+            target="_blank">https://letterboxd.com/import/</a></p>
+    <form id="form">
+        <fieldset class="docs">
+            <div class="row">
+                <label for="netflix-file">
+                    Netflix viewing history file:
+                    <input id="netflix-file" type="file">
+                </label>
+            </div>
+            <div class="row">
+                <input type="submit" value="Convert">
+            </div>
+        </fieldset>
+    </form>
+    <div>
+        <label for="debug">
+            Show debug log
+            <input type="checkbox" id="debug">
+        </label>
+        <div id="log"></div>
+    </div>
+</main>
+<script type="module" src="letterflixd.js"></script>

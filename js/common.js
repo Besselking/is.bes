@@ -8,26 +8,6 @@ function getById(id) {
 }
 
 /**
- * @param {HTMLLIElement[]} children
- * @returns {HTMLUListElement}
- */
-function ul(...children) {
-    const ulElem = document.createElement("ul");
-    ulElem.replaceChildren(...children);
-    return ulElem;
-}
-
-/**
- * @param {HTMLElement[]} children
- * @returns {HTMLLIElement}
- */
-function li(...children) {
-    const liElem = document.createElement("li");
-    liElem.replaceChildren(...children);
-    return liElem;
-}
-
-/**
  * @param {string} href
  * @returns {HTMLAnchorElement}
  */
@@ -36,16 +16,6 @@ function a(href, pageName) {
     aElem.href = href;
     aElem.text = pageName;
     return aElem;
-}
-
-/**
- * @param {HTMLElement[]} children
- * @returns {HTMLElement}
- */
-function footer(...children) {
-    const footerElem = document.createElement("footer");
-    footerElem.replaceChildren(...children);
-    return footerElem;
 }
 
 function div(...children) {
@@ -90,4 +60,4 @@ function resetLog() {
 
 const log = getById("log");
 
-export { getById, ul, li, a, footer, div, span, h, addClass, writeError, writeInfo, writeDebug, resetLog }
+export { getById, a, div, span, h, addClass, writeError, writeInfo, writeDebug, resetLog }

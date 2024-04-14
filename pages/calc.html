@@ -1,0 +1,55 @@
+__nav Calculator__
+
+<main>
+    <p>A rpn calculator</p>
+    <form id="form" class="flex-row">
+        <input id="input" type="text" placeholder="1 2 +" />
+        <input type="submit" value="Evaluate">
+    </form>
+    <div>
+        <div id="log"></div>
+    </div>
+
+    <fieldset class="docs">
+        <legend>Available stack operations</legend>
+        <details>
+            <summary>dup</summary>
+            <p>Duplicates the top value on the stack</p>
+            <div class="flex-spread">
+                <span>[1, 2, 3]</span>
+                <span>dup</span>
+            </div>
+            <div class="flex-spread">
+                <span>[1, 1, 2, 3]</span>
+                <span></span>
+            </div>
+        </details>
+
+        <details>
+            <summary>drop</summary>
+            <p>Drops the top value on the stack</p>
+            <div class="flex-spread">
+                <span>[1, 2, 3]</span>
+                <span>drop</span>
+            </div>
+            <div class="flex-spread">
+                <span>[2, 3]</span>
+                <span></span>
+            </div>
+        </details>
+
+        <details>
+            <summary>swap</summary>
+            <p>Swaps the top two values on the stack</p>
+            <div class="flex-spread">
+                <span>[1, 2, 3]</span>
+                <span>swap</span>
+            </div>
+            <div class="flex-spread">
+                <span>[2, 1, 3]</span>
+                <span></span>
+            </div>
+        </details>
+    </fieldset>
+</main>
+<script type="module" src="calc.js"></script>

@@ -1,0 +1,136 @@
+__nav Concatenator__
+
+<main>
+    <p>A "concatenative language"</p>
+    <form id="form">
+        <textarea id="input" placeholder="1 2 +" rows="5"></textarea>
+        <input type="submit" value="Run program">
+    </form>
+    <div>
+        <div id="log"></div>
+    </div>
+
+    <fieldset class="docs">
+        <legend>Predefined operations</legend>
+        <details>
+            <summary>dup</summary>
+            <p>Duplicates the top value on the stack</p>
+            <div class="flex-spread">
+                <span>[1, 2, 3]</span>
+                <span>dup</span>
+            </div>
+            <div class="flex-spread">
+                <span>[1, 1, 2, 3]</span>
+                <span></span>
+            </div>
+        </details>
+
+        <details>
+            <summary>drop</summary>
+            <p>Drops the top value on the stack</p>
+            <div class="flex-spread">
+                <span>[1, 2, 3]</span>
+                <span>drop</span>
+            </div>
+            <div class="flex-spread">
+                <span>[2, 3]</span>
+                <span></span>
+            </div>
+        </details>
+
+        <details>
+            <summary>swap</summary>
+            <p>Swaps the top two values on the stack</p>
+            <div class="flex-spread">
+                <span>[1, 2, 3]</span>
+                <span>swap</span>
+            </div>
+            <div class="flex-spread">
+                <span>[2, 1, 3]</span>
+                <span></span>
+            </div>
+        </details>
+
+        <details>
+            <summary>skip</summary>
+            <p>Skips forward in the program by the amount on the top of the stack.
+                If the value on the top of the stack is 0 or negative,
+                the value is dropped and the program does not skip ahead.
+            </p>
+            <div class="flex-spread">
+                <span>[1, 2, 3]</span>
+                <span>skip drop dup</span>
+            </div>
+            <div class="flex-spread">
+                <span>[2, 3]</span>
+                <span>dup</span>
+            </div>
+            <div class="flex-spread">
+                <span>[2, 2, 3]</span>
+                <span></span>
+            </div>
+            Or
+            <div class="flex-spread">
+                <span>[-1, 2, 3]</span>
+                <span>skip drop dup</span>
+            </div>
+            <div class="flex-spread">
+                <span>[2, 3]</span>
+                <span>drop dup</span>
+            </div>
+            <div class="flex-spread">
+                <span>[3]</span>
+                <span>dup</span>
+            </div>
+            <div class="flex-spread">
+                <span>[3, 3]</span>
+                <span></span>
+            </div>
+        </details>
+
+        <details>
+            <summary>: word ... ;</summary>
+            <p>Creates a new definition.</p>
+            <p>Example: ": double 2 * ;" defines a new word called double. Any subsequent mention of double will
+                replace the word with its definition.</p>
+            <div class="flex-spread">
+                <span>[]</span>
+                <span>: double 2 * ; 3 double</span>
+            </div>
+            <div class="flex-spread">
+                <span>[]</span>
+                <span>3 double</span>
+            </div>
+            <div class="flex-spread">
+                <span>[3]</span>
+                <span>double</span>
+            </div>
+            <div class="flex-spread">
+                <span>[3]</span>
+                <span>2 *</span>
+            </div>
+            <div class="flex-spread">
+                <span>[2, 3]</span>
+                <span>*</span>
+            </div>
+            <div class="flex-spread">
+                <span>[6] &lt;==</span>
+                <span></span>
+            </div>
+        </details>
+    </fieldset>
+    <fieldset class="docs">
+        <legend>Example programs</legend>
+        <details>
+            <summary>Factorial</summary>
+            <a href="/concat.html?in=FwAgxg9grgdgLgUwE4lQEygBxAJhAZwHcBDbAWhAG4AoUAQlRA2wEYQLJZEV8BrAS2wMAVFWoB2EHWpA">Replace
+                program</a>
+            <pre>
+                    : counter   dup 2 swap - ;
+                    : !   dup 1 - counter skip ! * ;
+                    7 !
+                </pre>
+        </details>
+    </fieldset>
+</main>
+<script type="module" src="concat.js"></script>

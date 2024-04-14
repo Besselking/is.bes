@@ -151,13 +151,10 @@ div+.history {
     margin-top: 2em;
 }
 
-hr {
-    border: none;
+main {
     border-top: 2px dotted var(--color);
-    color: var(--color);
-    overflow: visible;
-    text-align: center;
-    height: 1em;
+    border-bottom: 2px dotted var(--color);
+    padding-block: 1em;
 }
 
 .docs {
