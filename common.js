@@ -31,9 +31,10 @@ function li(...children) {
  * @param {string} href
  * @returns {HTMLAnchorElement}
  */
-function a(href) {
+function a(href, pageName) {
     const aElem = document.createElement("a");
     aElem.href = href;
+    aElem.text = pageName;
     return aElem;
 }
 
