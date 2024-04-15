@@ -53,10 +53,6 @@ header>h1 {
     display: inline-block;
 }
 
-/* nav {
-    border-bottom: 1px solid black;
-} */
-
 nav>ul {
     list-style-type: none;
     padding-left: 0;
