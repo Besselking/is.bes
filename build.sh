@@ -1,4 +1,11 @@
 #!/bin/bash
+
+mkdir "www"
+
+prefetching=$(find "./pages" "./js" -type f -print0 \
+    | xargs -0 -I {} basename "{}" \
+    | xargs -I {} echo "<link rel=\"prefetch\" href=\"{}\">\n\t")
+
 header=$(cat "templates/header.html" \
     | sed '/__style__/ {
         s/__style__/<style>/g
@@ -6,7 +13,7 @@ header=$(cat "templates/header.html" \
         r css/style.css
         a\
         </style>
-    }')
+    }' | sed "s,__prefetch__,$(echo $prefetching),g;s/\t/   /g")
 footer=$(<"templates/footer.html")
 
 

@@ -1,8 +1,4 @@
-import { getById, div, span, h } from "./common.js"
-
-function writeError(error) {
-    log.appendChild(div(span(error)));
-}
+import { getById, div, span, h, writeError } from "./common.js"
 
 /** @param {SubmitEvent} event */
 function submitForm(event) {

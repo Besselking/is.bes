@@ -11,7 +11,8 @@
 
     --ratio: 1.5;
     --s0: 1rem;
-    --s1: calc(var(--s0) * var(--ratio)) font-size: calc(1rem + 0.5vw);
+    --s1: calc(var(--s0) * var(--ratio));
+    font-size: calc(1rem + 0.5vw);
     font-family: monospace;
 }
 
@@ -112,6 +113,8 @@ pre {
     white-space: pre-line;
 }
 
+button,
+input[type="button"],
 input[type="submit"] {
     min-width: 20%;
     display: inline-block;
