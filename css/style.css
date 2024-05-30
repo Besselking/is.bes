@@ -55,7 +55,7 @@ header>h1 {
 
 nav>ul {
     list-style-type: none;
-    padding-left: 0;
+    padding-inline-start: 0;
 }
 
 nav>ul>li {
@@ -147,12 +147,12 @@ input[type="file"]::file-selector-button {
 }
 
 div+.history {
-    margin-top: 2em;
+    margin-block-start: 2em;
 }
 
 main {
-    border-top: 2px dotted var(--color);
-    border-bottom: 2px dotted var(--color);
+    border-block-start: 2px dotted var(--color);
+    border-block-end: 2px dotted var(--color);
     padding-block: 1em;
 }
 

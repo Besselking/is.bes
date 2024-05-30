@@ -60,4 +60,28 @@ function resetLog() {
 
 const log = getById("log");
 
-export { getById, a, div, span, h, addClass, writeError, writeInfo, writeDebug, resetLog }
+// https://stackoverflow.com/questions/75988682/debounce-in-javascript
+// https://www.joshwcomeau.com/snippets/javascript/debounce/
+function debounce(callback, wait) {
+    let timeoutId = null;
+    return (...args) => {
+        window.clearTimeout(timeoutId);
+        timeoutId = window.setTimeout(() => {
+            callback(...args);
+        }, wait);
+    };
+}
+
+export {
+    getById,
+    a,
+    div,
+    span,
+    h,
+    addClass,
+    writeError,
+    writeInfo,
+    writeDebug,
+    resetLog,
+    debounce
+}
