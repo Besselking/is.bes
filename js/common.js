@@ -1,9 +1,9 @@
 function getById(id) {
-    let element = document.getElementById(id)
+    let element = document.getElementById(id);
     if (element) {
         return element;
     } else {
-        throw `Element with id '${id}' not found.`
+        throw `Element with id '${id}' not found.`;
     }
 }
 
@@ -83,5 +83,5 @@ export {
     writeInfo,
     writeDebug,
     resetLog,
-    debounce
-}
+    debounce,
+};

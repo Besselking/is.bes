@@ -5,9 +5,8 @@
 :root {
     --black: #050505;
     --white: #fafafa;
-    --error: #DA0000;
-    --info: #669ABA;
-
+    --error: #da0000;
+    --info: #669aba;
 
     --ratio: 1.5;
     --s0: 1rem;
@@ -48,31 +47,31 @@ body {
     display: inline-block;
 }
 
-header>h1 {
+header > h1 {
     color: var(--header);
     display: inline-block;
 }
 
-nav>ul {
+nav > ul {
     list-style-type: none;
     padding-inline-start: 0;
 }
 
-nav>ul>li {
+nav > ul > li {
     display: inline-block;
 }
 
-nav>ul>li>a::after {
+nav > ul > li > a::after {
     display: inline-block;
     color: var(--color);
-    content: '>';
+    content: ">";
     font-size: 80%;
     font-weight: bold;
     padding: 0 3px;
 }
 
 li::marker {
-    content: "==> "
+    content: "==> ";
 }
 
 a {
@@ -146,7 +145,7 @@ input[type="file"]::file-selector-button {
     filter: opacity(30%);
 }
 
-div+.history {
+div + .history {
     margin-block-start: 2em;
 }
 
@@ -184,4 +183,11 @@ label:has(> #debug:not(:checked)) + #log .debug {
 
 .row + .row {
     margin-block-start: 1em;
+}
+
+.noselect {
+    user-select: none;
+    -moz-user-select: -moz-none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
 }

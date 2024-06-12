@@ -1,4 +1,12 @@
-import { getById, writeInfo } from "./common.js"
+import { getById, div, span, addClass /*writeInfo*/ } from "./common.js";
+
+function writeInfo(label, msg) {
+    log.appendChild(
+        div(
+            addClass(div(addClass(span(label), "noselect"), span(msg)), "info"),
+        ),
+    );
+}
 
 function generateBsn() {
     const nr9 = Math.floor(Math.random() * 7);
@@ -9,21 +17,28 @@ function generateBsn() {
     const nr4 = Math.floor(Math.random() * 10);
     const nr3 = Math.floor(Math.random() * 10);
     let nr2 = Math.floor(Math.random() * 10);
-    const bsnNumber = 9 * nr9 + 8 * nr8 + 7 * nr7 + 6 * nr6 + 5 * nr5 + 4 * nr4 + 3 * nr3 + 2 * nr2;
-    let nr1 = Math.floor(bsnNumber - (Math.floor(bsnNumber / 11)) * 11);
+    const bsnNumber =
+        9 * nr9 +
+        8 * nr8 +
+        7 * nr7 +
+        6 * nr6 +
+        5 * nr5 +
+        4 * nr4 +
+        3 * nr3 +
+        2 * nr2;
+    let nr1 = Math.floor(bsnNumber - Math.floor(bsnNumber / 11) * 11);
     if (nr1 > 9) {
         if (nr2 > 0) {
             nr2 -= 1;
             nr1 = 8;
-        }
-        else {
+        } else {
             nr2 += 1;
             nr1 = 1;
         }
     }
 
-    const BSNString = '' + nr9 + nr8 + nr7 + nr6 + nr5 + nr4 + nr3 + nr2 + nr1;
-    writeInfo("BSN: " + BSNString);
+    const BSNString = "" + nr9 + nr8 + nr7 + nr6 + nr5 + nr4 + nr3 + nr2 + nr1;
+    writeInfo("BSN: ", BSNString);
 }
 
 const gen_bsn = getById("bsn");
