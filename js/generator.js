@@ -1,4 +1,4 @@
-import { getById, div, span, addClass /*writeInfo*/ } from "./common.js";
+import { addClass /*writeInfo*/, div, getById, span } from "./common.js";
 
 function writeInfo(label, msg) {
     log.appendChild(
