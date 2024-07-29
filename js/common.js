@@ -43,15 +43,23 @@ function addClass(element, newClass) {
 }
 
 function writeError(error) {
-    log.appendChild(div(addClass(span(error), "error")));
+    writeLog(error, "error");
 }
 
 function writeInfo(msg) {
-    log.appendChild(div(addClass(span(msg), "info")));
+    writeLog(msg, "info");
 }
 
 function writeDebug(msg) {
-    log.appendChild(div(addClass(span(msg), "debug")));
+    writeLog(msg, "debug");
+}
+
+function writeLog(msg, className) {
+    if (typeof msg === "string" || msg instanceof String) {
+        log.appendChild(div(addClass(span(msg), className)));
+    } else {
+        log.appendChild(div(addClass(msg, className)));
+    }
 }
 
 function resetLog() {

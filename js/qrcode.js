@@ -1,4 +1,8 @@
-import { getById, writeError, writeInfo } from "./common.js";
+import { getById, writeError, writeInfo, a, div } from "./common.js";
+
+// regexr.com/2rj36
+const url_like_regex =
+    /^[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?$/i;
 
 ///https://stackoverflow.com/questions/3115982/how-to-check-if-two-arrays-are-equal-with-javascript
 function arraysEqual(a, b) {
@@ -6,15 +10,24 @@ function arraysEqual(a, b) {
     if (a == null || b == null) return false;
     if (a.length !== b.length) return false;
 
-    // If you don't care about the order of the elements inside
-    // the array, you should sort both arrays here.
-    // Please note that calling sort on an array will modify that array.
-    // you might want to clone your array first.
-
     for (var i = 0; i < a.length; ++i) {
         if (a[i] !== b[i]) return false;
     }
     return true;
+}
+
+function logQRValue(value) {
+    if (URL.canParse(value)) {
+        writeInfo(div(a(new URL(url).href, value)));
+    } else if (url_like_regex.test(value)) {
+        // Not a true URL but close enough for me to create an anchor tag.
+        if (!value.startsWith("http://") && !value.startsWith("https://")) {
+            value = "https://" + value;
+        }
+        writeInfo(div(a(value, value)));
+    } else {
+        writeInfo(value);
+    }
 }
 
 // check compatibility
@@ -45,7 +58,8 @@ if (!("BarcodeDetector" in globalThis)) {
                         if (arraysEqual(values, lastbarcodes)) {
                             return;
                         }
-                        values.forEach(writeInfo);
+
+                        values.forEach(logQRValue);
                         lastbarcodes = values;
                     }
                 })
