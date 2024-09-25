@@ -1,6 +1,6 @@
 #!/bin/bash
 
-mkdir "www"
+mkdir -p "www"
 
 prefetching=$(find "./pages" "./js" -type f -print0 \
     | xargs -0 -I {} basename "{}" \
@@ -30,4 +30,18 @@ for filename in ./js/*.js; do
     base_name=$(basename ${filename})
     # TODO minify?
     cp "$filename" "www/$base_name"
+done
+
+#spotify
+
+mkdir -p "www/spotify"
+
+for filename in ./pages/spotify/*.html; do
+    base_name=$(basename ${filename})
+    cp "$filename" "www/spotify/$basename"
+done
+
+for filename in ./js/spotify/*.js; do
+    base_name=$(basename ${filename})
+    cp "$filename" "www/spotify/$basename"
 done

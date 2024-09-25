@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Playlist editor for Spotify">
+    <link rel="shortcut icon"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='50%25' y ='50%25' dominant-baseline='middle' text-anchor='middle' style='font-family:monospace; color:var(--color)'%3EMB%3C/text%3E%3C/svg%3E"
+        type="image/svg+xml">
+    <style>
+        body {
+            font-family: monospace;
+        }
+        th {
+            text-decoration: double;
+        }
+        tr.row {
+            counter-increment: row-numbers;
+            & td.row-num::before {
+                content: counter(row-numbers);
+            }
+        }
+        tr.row + tr.row {
+            border-top: 1px solid black;
+        }
+        td {
+            padding-inline: 1em;
+        }
+        td + td {
+            border-left: 1px dashed lightgray;
+        }
+        footer {
+            padding-inline: 3em;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: white;
+        }
+        table {
+            width: 100%;
+            //border-collapse: collapse;
+            counter-reset: row-numbers;
+        }
+    </style>
+    <title>Playlist editor</title>
+</head>
+
+<div id="main"></div>
+<div id="oauth"></div>
+<div id="playlist-section">
+    <div id="playlists-header"></div>
+    <div id="playlists"></div>
+</div>
+<div id="playlist-tracks"></div>
+
+<footer>
+    <progress id="progress" max="100" value="0"></progress>
+    <span id="status">Loading...</span>
+</footer>
+
+<template id="login">
+    <h1>Welcome to the OAuth2 PKCE Example</h1>
+    <button id="login-button" data-bind-onclick="loginWithSpotifyClick();"> Log in with Spotify </button>
+</template>
+
+<template id="logged-in-template">
+    <h1>Logged in as <span data-bind="display_name"></span></h1>
+    <img width="150" data-bind-src="images[0].url" data-bind-alt="display_name" />
+    <table>
+        <tr>
+            <td>Display name</td>
+            <td data-bind="display_name"></td>
+        </tr>
+        <tr>
+            <td>Id</td>
+            <td data-bind="id"></td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td data-bind="email"></td>
+        </tr>
+        <tr>
+            <td>Spotify URI</td>
+            <td>
+                <a data-bind="external_urls.spotify" data-bind-href="external_urls.spotify"></a>
+            </td>
+        </tr>
+        <tr>
+            <td>Link </dt>
+            <td>
+                <a data-bind="href" data-bind-href="href"></a>
+            </td>
+        </tr>
+        <tr>
+            <td>Profile Image</td>
+            <td>
+                <a data-bind-href="images[0].url" data-bind="images[0].url"></a>
+            </td>
+        </tr>
+        <tr>
+            <td>Country</td>
+            <td data-bind="country"></td>
+        </tr>
+    </table>
+
+    <button id="refresh-token-button" data-bind-onclick="refreshTokenClick();">Refresh Token</button>
+    <button id="logout-button" data-bind-onclick="logoutClick();">Log out</button>
+</template>
+
+<template id="oauth-template">
+    <h2>oAuth info</h2>
+    <table>
+        <tr>
+            <td>Access token</td>
+            <td data-bind="access_token"></td>
+        </tr>
+        <tr>
+            <td>Refresh token</td>
+            <td data-bind="refresh_token"></td>
+        </tr>
+        <tr>
+            <td>Expiration at</td>
+            <td data-bind="expires"></td>
+        </tr>
+    </table>
+</template>
+
+<template id="playlists-header-template">
+    <h2>Playlists <button id="refresh-playlists-button" data-bind-onclick="refreshPlaylistsClick();">Refresh</button></h2>
+    <fieldset>
+        <label>
+            Show just my playlists
+            <input type="checkbox" name="just-my-playlists" id="just-my-playlists" data-bind-onclick="justMyPlaylistsClick();">
+        </label>
+    </fieldset>
+</template>
+
+<template id="playlists-template">
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th><!-- Image --></th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Owner</th>
+                <th>Tracks</th>
+            </tr>
+        </thead>
+        <tbody foreach="items" render="playlist-template">
+            <!-- existing data could optionally be included here -->
+        </tbody>
+    </table>
+</template>
+
+<template id="playlist-template">
+    <tr class="row">
+        <td class="row-num"></td>
+        <td>
+            <img width="60" data-bind-src="images[data.images.length-1].url" data-bind-alt="name" />
+        </td>
+
+        <td>
+            <a data-bind="name" data-bind-onclick="openPlaylist(data.id);" href="#"></a>
+        </td>
+        <td data-bind="description"></td>
+        <td data-bind="owner.display_name" data-bind-data_owner="owner.id"></td>
+        <td data-bind="tracks.total"></td>
+    </tr>
+</template>
+
+<template id="playlist-tracks-template">
+    <button data-bind-onclick="backToPlaylists();"><- Back</button>
+    <h2 data-bind="name"></h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th><!-- Image --></th>
+                <th>Name</th>
+                <th>Artists</th>
+                <th>Duration</th>
+            </tr>
+        </thead>
+        <tbody foreach-key="items" foreach-in="tracks" render="track-template">
+            <!-- existing data could optionally be included here -->
+        </tbody>
+    </table>
+</template>
+
+<template id="track-template">
+    <tr class="row">
+        <td class="row-num"></td>
+        <!-- <td data-bind="this"></td> -->
+        <td>
+            <img width="50" data-bind-src="album.images[0]?.url" data-bind-alt="album.name" />
+        </td>
+
+        <td data-bind="name"></td>
+        <td data-bind="artists[0].name"></td>
+        <td data-bind="duration_ms"></td>
+    </tr>
+</template>
+
+<script src="app.js" type="module"></script>
+</body>
+
+</body>
+
+</html>
