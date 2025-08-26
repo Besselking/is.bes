@@ -80,6 +80,59 @@ function debounce(callback, wait) {
     };
 }
 
+const stylesheet = new CSSStyleSheet();
+stylesheet.replaceSync(`
+    a {
+        color: var(--color);
+    }   
+    nav > ul {
+        list-style-type: none;
+        padding-inline-start: 0;
+    }
+
+    nav > ul > li {
+        display: inline-block;
+    }
+
+    nav > ul > li > a::after {
+        display: inline-block;
+        color: var(--color);
+        content: ">";
+        font-size: 80%;
+        font-weight: bold;
+        padding: 0 3px;
+    }
+`);
+
+customElements.define("mb-nav",
+    class MBNav extends HTMLElement {
+        constructor() {
+            super();
+        }
+
+        get pagename() {
+            return this.getAttribute("pagename");
+        }
+
+        set pagename(value) {
+            this.setAttribute("pagename", value);
+        }
+
+        connectedCallback() {
+            const shadow = this.attachShadow({ mode: "open" });
+            shadow.adoptedStyleSheets = [stylesheet];
+
+            shadow.appendChild(
+                h("nav",
+                    h("ul",
+                        h("li", a("/", "MB.bes.is")),
+                        h("li", span(this.pagename)),
+                    )
+                )
+            )
+        }
+    });
+
 export {
     getById,
     a,

@@ -2,18 +2,7 @@
 
 mkdir -p "www"
 
-prefetching=$(find "./pages" "./js" -type f -print0 \
-    | xargs -0 -I {} basename "{}" \
-    | xargs -I {} echo "<link rel=\"prefetch\" href=\"{}\">\n\t")
-
-header=$(cat "templates/header.html" \
-    | sed '/__style__/ {
-        s/__style__/<style>/g
-        r css/reset.css
-        r css/style.css
-        a\
-        </style>
-    }' | sed "s,__prefetch__,$(echo $prefetching),g;s/\t/   /g")
+header=$(<"templates/header.html")
 footer=$(<"templates/footer.html")
 
 
@@ -29,6 +18,11 @@ done
 for filename in ./js/*.js; do
     base_name=$(basename ${filename})
     # TODO minify?
+    cp "$filename" "www/$base_name"
+done
+
+for filename in ./css/*.css; do
+    base_name=$(basename ${filename})
     cp "$filename" "www/$base_name"
 done
 
